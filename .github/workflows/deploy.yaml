@@ -11,7 +11,7 @@ env:
   API_CLUSTER_NAME: aks-api-fint-2022-02-08
   API_CLUSTER_RESOURCE_GROUP: rg-aks-api
   NAMESPACE: default
-  APP_NAME: <name of project/application>
+  APP_NAME: fint-core-adapter-skeleton
 
 jobs:
   build:
