@@ -1,0 +1,3 @@
+# FINT Core Adapter Skeleton
+
+
