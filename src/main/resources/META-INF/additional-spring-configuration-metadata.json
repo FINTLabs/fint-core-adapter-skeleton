@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "fint.adapter.id",
+      "type": "java.lang.String",
+      "description": "A persistent uniq id for the adapter. It should be in the format: https://<company domain>/<customer domain>/<FINT domain>/<FINT package (optional)>/<UUID (optional)>."
+    }
+  ] }

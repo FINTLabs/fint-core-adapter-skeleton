@@ -1,11 +1,9 @@
-package no.fintlabs;
+package no.fintlabs.adapter;
 
 import io.netty.channel.ChannelOption;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.reactive.ClientHttpConnector;
@@ -26,14 +24,20 @@ import java.util.Map;
 @Getter
 @Setter
 @Configuration
-@RequiredArgsConstructor
-@ConfigurationProperties(prefix = "fint.adapter")
+//@RequiredArgsConstructor
+//@ConfigurationProperties(prefix = "fint.adapter")
 public class OAuthConfiguration {
 
-    private String baseUrl;
-    private String username;
-    private String password;
-    private String registrationId;
+//    private String baseUrl;
+//    private String username;
+//    private String password;
+//    private String registrationId;
+
+    private final AdapterProperties props;
+
+    public OAuthConfiguration(AdapterProperties props) {
+        this.props = props;
+    }
 
     @Bean
     public ReactiveOAuth2AuthorizedClientManager authorizedClientManager(
@@ -52,8 +56,8 @@ public class OAuthConfiguration {
 
         authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
         authorizedClientManager.setContextAttributesMapper(oAuth2AuthorizeRequest -> Mono.just(Map.of(
-                OAuth2AuthorizationContext.USERNAME_ATTRIBUTE_NAME, username,
-                OAuth2AuthorizationContext.PASSWORD_ATTRIBUTE_NAME, password
+                OAuth2AuthorizationContext.USERNAME_ATTRIBUTE_NAME, props.getUsername(),
+                OAuth2AuthorizationContext.PASSWORD_ATTRIBUTE_NAME, props.getPassword()
         )));
 
         return authorizedClientManager;
@@ -64,11 +68,12 @@ public class OAuthConfiguration {
         return new ReactorClientHttpConnector(HttpClient.create(
                         ConnectionProvider
                                 .builder("laidback")
+                                .maxConnections(100)
                                 .maxLifeTime(Duration.ofMinutes(30))
                                 .maxIdleTime(Duration.ofMinutes(5))
                                 .build())
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 300000)
-                .responseTimeout(Duration.ofMinutes(5))
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 600000)
+                .responseTimeout(Duration.ofMinutes(10))
         );
     }
 
@@ -79,13 +84,13 @@ public class OAuthConfiguration {
                 .build();
 
         ServerOAuth2AuthorizedClientExchangeFilterFunction oauth2Client = new ServerOAuth2AuthorizedClientExchangeFilterFunction(authorizedClientManager);
-        oauth2Client.setDefaultClientRegistrationId(registrationId);
+        oauth2Client.setDefaultClientRegistrationId(props.getRegistrationId());
 
         return builder
                 .clientConnector(clientHttpConnector)
                 .exchangeStrategies(exchangeStrategies)
                 .filter(oauth2Client)
-                .baseUrl(baseUrl)
+                .baseUrl(props.getBaseUrl())
                 .build();
     }
 }
