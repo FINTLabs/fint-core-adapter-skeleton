@@ -9,12 +9,14 @@ fint:
     org-id: fintlabs.no
     ping-interval: 1
     capabilities:
-      - domain: utdanning
+      fravar:
+        domain: utdanning
         packageName: vurdering
         clazz: fravar
         fullSyncIntervalInDays: 7
         deltaSyncInterval: IMMEDIATE
-      - domain: utdanning
+      fravarsoversikt:
+        domain: utdanning
         packageName: vurdering
         clazz: fravarsoversikt
         fullSyncIntervalInDays: 7
@@ -34,4 +36,6 @@ spring:
             client-secret:
             provider: fint-idp
             scope: fint-adapter
+
+
 

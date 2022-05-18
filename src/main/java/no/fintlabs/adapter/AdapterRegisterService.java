@@ -2,12 +2,12 @@ package no.fintlabs.adapter;
 
 import lombok.extern.slf4j.Slf4j;
 import no.fintlabs.adapter.models.AdapterContract;
-import no.fintlabs.custom.FullSyncService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
+import java.util.Collection;
 
 @Slf4j
 @Service
@@ -16,14 +16,16 @@ public class AdapterRegisterService {
 
     private final WebClient webClient;
     private final PingService pingService;
-    private final FullSyncService fullSyncService;
     private final AdapterProperties props;
 
-    public AdapterRegisterService(WebClient webClient, PingService pingService, FullSyncService fullSyncService, AdapterProperties props) {
+    private final Collection<ResourceHandler> handlers;
+
+
+    public AdapterRegisterService(WebClient webClient, PingService pingService, AdapterProperties props, Collection<ResourceHandler> handlers) {
         this.webClient = webClient;
         this.pingService = pingService;
-        this.fullSyncService = fullSyncService;
         this.props = props;
+        this.handlers = handlers;
     }
 
     @PostConstruct
@@ -35,7 +37,7 @@ public class AdapterRegisterService {
                 .time(System.currentTimeMillis())
                 .pingIntervalInMinutes(props.getPingInterval())
                 .username(props.getUsername())
-                .capabilities(props.getCapabilities())
+                .capabilities(props.adapterCapabilityToSet())
                 .build();
 
         webClient.post()
@@ -46,8 +48,8 @@ public class AdapterRegisterService {
                 .subscribe(response -> {
                     log.info("Register return with code {}.", response.getStatusCode().value());
                     pingService.start();
-                    fullSyncService.start();
-
+                    //syncService.start();
+                    handlers.forEach(ResourceHandler::start);
                 });
 
         log.info("Keep on rocking in a free world ✌️🌻️🇺🇦!");

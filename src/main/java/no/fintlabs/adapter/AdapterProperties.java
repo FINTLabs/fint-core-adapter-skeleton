@@ -9,6 +9,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.Duration;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Getter
@@ -27,9 +29,16 @@ public class AdapterProperties {
     private String baseUrl;
     private String orgId;
 
-    private Set<AdapterCapability> capabilities;
+    private Map<String, AdapterCapability> capabilities;
 
+    public Set<AdapterCapability> adapterCapabilityToSet() {
+        return new HashSet<>(capabilities.values());
+    }
     public long getPingIntervalMs() {
         return Duration.parse("PT" + pingInterval + "M").toMillis();
+    }
+
+    public long getFullSyncIntervalMs(String entity) {
+        return Duration.parse("PT" + capabilities.get(entity).getFullSyncIntervalInDays() + "M").toMillis();
     }
 }
