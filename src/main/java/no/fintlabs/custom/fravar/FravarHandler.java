@@ -25,7 +25,8 @@ public class FravarHandler extends ResourceHandler {
 
         if (started) {
             log.info("Starting full sync...");
-            getPages(fravarService.getFravar(), 500).forEach(this::post);
+            getPages(fravarService.getFravar(), 500)
+                    .forEach(this::post);
         } else {
             log.info("Full sync services is not started yet 🧐");
         }

@@ -31,7 +31,7 @@ public class FravarService {
     @PostConstruct
     public void init() {
 
-        for (int i = 0; i < 5000; i++) {
+        for (int i = 0; i < 5243; i++) {
             fravar.add(createFravar());
         }
         log.info("Generated {} fravar resources", fravar.size());

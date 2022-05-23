@@ -58,15 +58,20 @@ public abstract class ResourceHandler {
         String corrId = UUID.randomUUID().toString();
 
         for (int i = 0; i < size; i += pageSize) {
+            int end = Math.min((i + pageSize), resources.size());
+            List<SyncPageEntry<T>> entries = resources.subList(i, end).stream().map(SyncPageEntry::ofSystemId).collect(Collectors.toList());
             pages.add(FullSyncPage.<T>builder()
-                    .resources(resources.subList(i, (i + pageSize)).stream().map(SyncPageEntry::ofSystemId).collect(Collectors.toList()))
+                    .resources(entries)
                     .metadata(SyncPageMetadata.builder()
-                            .orgId("fintlabs.no")
+                            .orgId(adapterProperties.getOrgId())
+                            .adapterId(adapterProperties.getId())
                             .corrId(corrId)
                             .totalPages(size / pageSize)
                             .totalSize(size)
+                            .pageSize(entries.size())
                             .page((i / pageSize) + 1)
                             .uriRef(getCapability().getEntityUri())
+                            .time(System.currentTimeMillis())
                             .build()
                     )
                     .build());

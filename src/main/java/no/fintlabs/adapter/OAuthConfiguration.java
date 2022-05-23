@@ -24,15 +24,7 @@ import java.util.Map;
 @Getter
 @Setter
 @Configuration
-//@RequiredArgsConstructor
-//@ConfigurationProperties(prefix = "fint.adapter")
 public class OAuthConfiguration {
-
-//    private String baseUrl;
-//    private String username;
-//    private String password;
-//    private String registrationId;
-
     private final AdapterProperties props;
 
     public OAuthConfiguration(AdapterProperties props) {
