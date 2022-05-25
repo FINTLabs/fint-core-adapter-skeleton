@@ -6,22 +6,22 @@ metadata:
 spec:
   itemPath: "vaults/aks-alpha-vault/items/fint-core-adapter-skeleton"
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  annotations:
-    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
-  labels:
-    io.kompose.service: fint-core-adapter-skeleton
-  name: fint-core-adapter-skeleton
-spec:
-  ports:
-    - name: "8080"
-      port: 8080
-  type: LoadBalancer
-  selector:
-    io.kompose.service: fint-core-adapter-skeleton
----
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  annotations:
+#    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+#  labels:
+#    io.kompose.service: fint-core-adapter-skeleton
+#  name: fint-core-adapter-skeleton
+#spec:
+#  ports:
+#    - name: "8080"
+#      port: 8080
+#  type: LoadBalancer
+#  selector:
+#    io.kompose.service: fint-core-adapter-skeleton
+#---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
