@@ -9,25 +9,35 @@ import reactor.core.publisher.Mono;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Flow;
 import java.util.stream.Collectors;
 
+import static java.util.concurrent.Flow.Subscriber;
+
 @Slf4j
-public abstract class ResourceHandler {
+public abstract class ResourceSubscriber<T extends FintLinks, P extends ResourcePublisher<T, ResourceRepository<T>>>
+        implements Subscriber<List<T>> {
 
     private final WebClient webClient;
     protected final AdapterProperties adapterProperties;
     protected boolean started;
 
+    protected final P publisher;
 
-    protected ResourceHandler(WebClient webClient, AdapterProperties adapterProperties) {
+
+    protected ResourceSubscriber(WebClient webClient, AdapterProperties adapterProperties, P publisher) {
         this.webClient = webClient;
         this.adapterProperties = adapterProperties;
+        this.publisher = publisher;
+        //this.publisher = publisher;
+
+        this.publisher.subscribe(this);
     }
 
     public void start() {
         log.info("Started sync service for {}.", getCapability().getEntityUri());
         started = true;
-        onFullSync();
+        //onFullSync();
     }
 
     public void stop() {
@@ -36,11 +46,18 @@ public abstract class ResourceHandler {
     }
 
     public abstract void onFullSync();
+    public  void onDeltaSync(List<T> resources) {
+        log.info("Delta syncing {} items to endpoint {}", resources.size(), getCapability().getEntityUri());
+        getPages(resources, 500).
+                forEach(this::post);
+    }
+
+    //public abstract <T extends FintLinks> void onDeltaSync(List<T> resources);
 
     protected abstract AdapterCapability getCapability();
 
 
-    protected <T extends FintLinks> void post(SyncPage<T> page) {
+    protected void post(SyncPage<T> page) {
         webClient.post()
                 .uri("/provider" + getCapability().getEntityUri())
                 .body(Mono.just(page), FullSyncPage.class)
@@ -78,5 +95,26 @@ public abstract class ResourceHandler {
         }
 
         return pages;
+    }
+
+    @Override
+    public void onSubscribe(Flow.Subscription subscription) {
+        log.info("Subscribing to resources for endpoint {}", getCapability().getEntityUri());
+        subscription.request(Long.MAX_VALUE);
+    }
+
+    @Override
+    public void onNext(List<T> resources) {
+        onDeltaSync(resources);
+    }
+
+    @Override
+    public void onError(Throwable throwable) {
+        log.error(throwable.getMessage());
+    }
+
+    @Override
+    public void onComplete() {
+        log.info("Subscriber for {} is closed", getCapability().getEntityUri());
     }
 }
