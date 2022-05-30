@@ -20,39 +20,20 @@ public abstract class ResourceSubscriber<T extends FintLinks, P extends Resource
 
     private final WebClient webClient;
     protected final AdapterProperties adapterProperties;
-    protected boolean started;
-
-    protected final P publisher;
 
 
     protected ResourceSubscriber(WebClient webClient, AdapterProperties adapterProperties, P publisher) {
         this.webClient = webClient;
         this.adapterProperties = adapterProperties;
-        this.publisher = publisher;
-        //this.publisher = publisher;
 
-        this.publisher.subscribe(this);
+        publisher.subscribe(this);
     }
 
-    public void start() {
-        log.info("Started sync service for {}.", getCapability().getEntityUri());
-        started = true;
-        //onFullSync();
-    }
-
-    public void stop() {
-        log.info("Stopped sync service for {}.", getCapability().getEntityUri());
-        started = false;
-    }
-
-    public abstract void onFullSync();
-    public  void onDeltaSync(List<T> resources) {
-        log.info("Delta syncing {} items to endpoint {}", resources.size(), getCapability().getEntityUri());
+    public void onSync(List<T> resources) {
+        log.info("Syncing {} items to endpoint {}", resources.size(), getCapability().getEntityUri());
         getPages(resources, 500).
                 forEach(this::post);
     }
-
-    //public abstract <T extends FintLinks> void onDeltaSync(List<T> resources);
 
     protected abstract AdapterCapability getCapability();
 
@@ -68,7 +49,7 @@ public abstract class ResourceSubscriber<T extends FintLinks, P extends Resource
                 });
     }
 
-    public <T extends FintLinks> List<SyncPage<T>> getPages(List<T> resources, int pageSize) {
+    public List<SyncPage<T>> getPages(List<T> resources, int pageSize) {
 
         List<SyncPage<T>> pages = new ArrayList<>();
         int size = resources.size();
@@ -105,7 +86,7 @@ public abstract class ResourceSubscriber<T extends FintLinks, P extends Resource
 
     @Override
     public void onNext(List<T> resources) {
-        onDeltaSync(resources);
+        onSync(resources);
     }
 
     @Override

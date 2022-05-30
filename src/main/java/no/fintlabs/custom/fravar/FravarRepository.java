@@ -12,33 +12,41 @@ import no.fint.model.utdanning.timeplan.Undervisningsgruppe;
 import no.fint.model.utdanning.vurdering.Fravar;
 import no.fintlabs.adapter.ResourceRepository;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 @Slf4j
 @Repository
-public class FravarRepository implements ResourceRepository<FravarResource> {
-    private final List<FravarResource> fravar = new ArrayList<>();
-
-    @Override
-    public List<FravarResource> getResources() {
-        return fravar;
-    }
+public class FravarRepository extends ResourceRepository<FravarResource> {
 
     @PostConstruct
     public void init() {
 
         for (int i = 0; i < 5243; i++) {
-            fravar.add(createFravar());
+            getResources().add(createFravar());
         }
-        log.info("Generated {} fravar resources", fravar.size());
+        log.info("Generated {} fravar resources", getResources().size());
 
 
+    }
+
+    @Override
+    public List<FravarResource> getUpdatedResources() {
+        int min = 0;
+        int start = new Random().ints(min, getResources().size())
+                .findFirst()
+                .orElseThrow();
+        int end = new Random().ints(start, getResources().size())
+                .findFirst()
+                .orElseThrow();
+
+        return getResources().subList(start, end);
     }
 
     private FravarResource createFravar() {
@@ -67,4 +75,6 @@ public class FravarRepository implements ResourceRepository<FravarResource> {
         boolean useNumbers = false;
         return RandomStringUtils.random(length, useLetters, useNumbers);
     }
+
+
 }

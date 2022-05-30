@@ -20,25 +20,6 @@ public class FravarSubscriber extends ResourceSubscriber<FravarResource, FravarP
         super(webClient, props, publisher);
     }
 
-    @PostConstruct
-    public void init() {
-        publisher.publishTestData();
-    }
-
-    @Override
-    //@Scheduled(fixedRateString = "#{@adapterProperties.getFullSyncIntervalMs('fravar')}")
-    public void onFullSync() {
-
-        if (started) {
-            log.info("Starting full sync...");
-
-            //getPages(fravarPublisher.getFravar(), 500)
-            //        .forEach(this::post);
-        } else {
-            log.info("Full sync services is not started yet 🧐");
-        }
-    }
-
 
     @Override
     protected AdapterCapability getCapability() {
