@@ -33,7 +33,7 @@ public class HeartbeatService {
     }
 
 
-    @Scheduled(fixedRateString = "#{@adapterProperties.heartbeatIntervalMs()}")
+    @Scheduled(fixedRateString = "#{@adapterProperties.getHeartbeatIntervalMs()}")
     public void doHeartbeat() {
 
         if (started) {
