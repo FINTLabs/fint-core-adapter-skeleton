@@ -9,38 +9,36 @@ import reactor.core.publisher.Mono;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Flow;
 import java.util.stream.Collectors;
 
+import static java.util.concurrent.Flow.Subscriber;
+
 @Slf4j
-public abstract class ResourceHandler {
+public abstract class ResourceSubscriber<T extends FintLinks, P extends ResourcePublisher<T, ResourceRepository<T>>>
+        implements Subscriber<List<T>> {
 
     private final WebClient webClient;
     protected final AdapterProperties adapterProperties;
-    protected boolean started;
 
 
-    protected ResourceHandler(WebClient webClient, AdapterProperties adapterProperties) {
+    protected ResourceSubscriber(WebClient webClient, AdapterProperties adapterProperties, P publisher) {
         this.webClient = webClient;
         this.adapterProperties = adapterProperties;
+
+        publisher.subscribe(this);
     }
 
-    public void start() {
-        log.info("Started sync service for {}.", getCapability().getEntityUri());
-        started = true;
-        onFullSync();
+    public void onSync(List<T> resources) {
+        log.info("Syncing {} items to endpoint {}", resources.size(), getCapability().getEntityUri());
+        getPages(resources, 500).
+                forEach(this::post);
     }
-
-    public void stop() {
-        log.info("Stopped sync service for {}.", getCapability().getEntityUri());
-        started = false;
-    }
-
-    public abstract void onFullSync();
 
     protected abstract AdapterCapability getCapability();
 
 
-    protected <T extends FintLinks> void post(SyncPage<T> page) {
+    protected void post(SyncPage<T> page) {
         webClient.post()
                 .uri("/provider" + getCapability().getEntityUri())
                 .body(Mono.just(page), FullSyncPage.class)
@@ -51,7 +49,7 @@ public abstract class ResourceHandler {
                 });
     }
 
-    public <T extends FintLinks> List<SyncPage<T>> getPages(List<T> resources, int pageSize) {
+    public List<SyncPage<T>> getPages(List<T> resources, int pageSize) {
 
         List<SyncPage<T>> pages = new ArrayList<>();
         int size = resources.size();
@@ -78,5 +76,26 @@ public abstract class ResourceHandler {
         }
 
         return pages;
+    }
+
+    @Override
+    public void onSubscribe(Flow.Subscription subscription) {
+        log.info("Subscribing to resources for endpoint {}", getCapability().getEntityUri());
+        subscription.request(Long.MAX_VALUE);
+    }
+
+    @Override
+    public void onNext(List<T> resources) {
+        onSync(resources);
+    }
+
+    @Override
+    public void onError(Throwable throwable) {
+        log.error(throwable.getMessage());
+    }
+
+    @Override
+    public void onComplete() {
+        log.info("Subscriber for {} is closed", getCapability().getEntityUri());
     }
 }

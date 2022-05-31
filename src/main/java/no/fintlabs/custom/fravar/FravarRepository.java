@@ -1,6 +1,5 @@
 package no.fintlabs.custom.fravar;
 
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
 import no.fint.model.felles.kompleksedatatyper.Periode;
@@ -11,33 +10,47 @@ import no.fint.model.utdanning.elev.Skoleressurs;
 import no.fint.model.utdanning.kodeverk.Fravarstype;
 import no.fint.model.utdanning.timeplan.Undervisningsgruppe;
 import no.fint.model.utdanning.vurdering.Fravar;
+import no.fintlabs.adapter.ResourceRepository;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
-@Data
 @Slf4j
-@Service
-public class FravarService {
+@Repository
+public class FravarRepository implements ResourceRepository<FravarResource> {
 
-    private final List<FravarResource> fravar = new ArrayList<>();
-
+    private final List<FravarResource> resources = new ArrayList<>();
 
     @PostConstruct
     public void init() {
 
         for (int i = 0; i < 5243; i++) {
-            fravar.add(createFravar());
+            resources.add(createFravar());
         }
-        log.info("Generated {} fravar resources", fravar.size());
+        log.info("Generated {} fravar resources", getResources().size());
+
 
     }
 
+    @Override
+    public List<FravarResource> getResources() {
+        return resources;
+    }
+
+    @Override
+    public List<FravarResource> getUpdatedResources() {
+        int min = 0;
+        int start = new Random().ints(min, getResources().size())
+                .findFirst()
+                .orElseThrow();
+        int end = new Random().ints(start, getResources().size())
+                .findFirst()
+                .orElseThrow();
+
+        return resources.subList(start, end);
+    }
 
     private FravarResource createFravar() {
         FravarResource fravarResource = new FravarResource();
@@ -65,4 +78,6 @@ public class FravarService {
         boolean useNumbers = false;
         return RandomStringUtils.random(length, useLetters, useNumbers);
     }
+
+
 }

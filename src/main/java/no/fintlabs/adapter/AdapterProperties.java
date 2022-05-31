@@ -41,4 +41,8 @@ public class AdapterProperties {
     public long getFullSyncIntervalMs(String entity) {
         return Duration.parse("PT" + capabilities.get(entity).getFullSyncIntervalInDays() + "H").toMillis();
     }
+
+    public AdapterCapability getCapabilityByResource(String resource) {
+        return capabilities.get(resource);
+    }
 }

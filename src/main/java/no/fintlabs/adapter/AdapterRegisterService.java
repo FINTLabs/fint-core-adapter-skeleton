@@ -7,7 +7,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
-import java.util.Collection;
 
 @Slf4j
 @Service
@@ -18,14 +17,11 @@ public class AdapterRegisterService {
     private final PingService pingService;
     private final AdapterProperties props;
 
-    private final Collection<ResourceHandler> handlers;
 
-
-    public AdapterRegisterService(WebClient webClient, PingService pingService, AdapterProperties props, Collection<ResourceHandler> handlers) {
+    public AdapterRegisterService(WebClient webClient, PingService pingService, AdapterProperties props) {
         this.webClient = webClient;
         this.pingService = pingService;
         this.props = props;
-        this.handlers = handlers;
     }
 
     @PostConstruct
@@ -48,8 +44,6 @@ public class AdapterRegisterService {
                 .subscribe(response -> {
                     log.info("Register return with code {}.", response.getStatusCode().value());
                     pingService.start();
-                    //syncService.start();
-                    handlers.forEach(ResourceHandler::start);
                 });
 
         log.info("Keep on rocking in a free world ✌️🌻️🇺🇦!");

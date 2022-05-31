@@ -51,9 +51,7 @@ public class PingService {
                     .retrieve()
                     .bodyToMono(String.class)
                     .subscribe(s -> {
-                        //if (s.equals("pong")) {
                             log.info("FINT responded: {}", s);
-                        //}
                     });
         } else {
             log.info("Ping service is not started yet!");
