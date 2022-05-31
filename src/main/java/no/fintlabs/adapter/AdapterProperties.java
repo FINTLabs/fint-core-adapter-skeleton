@@ -21,7 +21,7 @@ import java.util.Set;
 @ConfigurationProperties(prefix = "fint.adapter")
 public class AdapterProperties {
 
-    private int pingInterval;
+    private int heartbeatInterval;
     private String id;
     private String username;
     private String password;
@@ -34,8 +34,8 @@ public class AdapterProperties {
     public Set<AdapterCapability> adapterCapabilityToSet() {
         return new HashSet<>(capabilities.values());
     }
-    public long getPingIntervalMs() {
-        return Duration.parse("PT" + pingInterval + "M").toMillis();
+    public long getHeartbeatIntervalMs() {
+        return Duration.parse("PT" + heartbeatInterval + "M").toMillis();
     }
 
     public long getFullSyncIntervalMs(String entity) {

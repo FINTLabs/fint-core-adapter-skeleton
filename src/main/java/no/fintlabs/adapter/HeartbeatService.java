@@ -1,7 +1,7 @@
 package no.fintlabs.adapter;
 
 import lombok.extern.slf4j.Slf4j;
-import no.fintlabs.adapter.models.AdapterPing;
+import no.fintlabs.adapter.models.AdapterHeartbeat;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono;
 
 @Slf4j
 @Service
-public class PingService {
+public class HeartbeatService {
 
 
     private final WebClient webClient;
@@ -17,28 +17,28 @@ public class PingService {
 
     private boolean started;
 
-    public PingService(WebClient webClient, AdapterProperties props) {
+    public HeartbeatService(WebClient webClient, AdapterProperties props) {
         this.webClient = webClient;
         this.props = props;
     }
 
     public void start() {
-        log.info("Started ping service.");
+        log.info("Started heartbeat service.");
         started = true;
     }
 
     public void stop() {
-        log.info("Stopped ping service.");
+        log.info("Stopped heartbeat service.");
         started = false;
     }
 
 
-    @Scheduled(fixedRateString = "#{@adapterProperties.getPingIntervalMs()}")
-    public void ping() {
+    @Scheduled(fixedRateString = "#{@adapterProperties.getHeartbeatIntervalMs()}")
+    public void doHeartbeat() {
 
         if (started) {
-            log.info("Pinging FINT...");
-            AdapterPing adapterPing = AdapterPing.builder()
+            log.info("Sending heartbeat FINT...");
+            AdapterHeartbeat adapterHeartbeat = AdapterHeartbeat.builder()
                     .time(System.currentTimeMillis())
                     .orgId(props.getOrgId())
                     .adapterId(props.getId())
@@ -46,15 +46,15 @@ public class PingService {
                     .build();
 
             webClient.post()
-                    .uri("/provider/ping")
-                    .body(Mono.just(adapterPing), AdapterPing.class)
+                    .uri("/provider/heartbeat")
+                    .body(Mono.just(adapterHeartbeat), AdapterHeartbeat.class)
                     .retrieve()
                     .bodyToMono(String.class)
                     .subscribe(s -> {
-                            log.info("FINT responded: {}", s);
+                        log.info("FINT responded: {}", s);
                     });
         } else {
-            log.info("Ping service is not started yet!");
+            log.info("Heartbeat service is not started yet!");
         }
     }
 
