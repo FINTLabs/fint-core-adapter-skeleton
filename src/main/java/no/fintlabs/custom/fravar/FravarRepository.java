@@ -12,28 +12,31 @@ import no.fint.model.utdanning.timeplan.Undervisningsgruppe;
 import no.fint.model.utdanning.vurdering.Fravar;
 import no.fintlabs.adapter.ResourceRepository;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Repository
-public class FravarRepository extends ResourceRepository<FravarResource> {
+public class FravarRepository implements ResourceRepository<FravarResource> {
+
+    private final List<FravarResource> resources = new ArrayList<>();
 
     @PostConstruct
     public void init() {
 
         for (int i = 0; i < 5243; i++) {
-            getResources().add(createFravar());
+            resources.add(createFravar());
         }
         log.info("Generated {} fravar resources", getResources().size());
 
 
+    }
+
+    @Override
+    public List<FravarResource> getResources() {
+        return resources;
     }
 
     @Override
@@ -46,7 +49,7 @@ public class FravarRepository extends ResourceRepository<FravarResource> {
                 .findFirst()
                 .orElseThrow();
 
-        return getResources().subList(start, end);
+        return resources.subList(start, end);
     }
 
     private FravarResource createFravar() {

@@ -8,12 +8,10 @@ import java.util.List;
 import java.util.stream.Stream;
 
 
-public abstract class ResourceRepository<T extends FintLinks> {
+public interface ResourceRepository<T extends FintLinks> {
 
-    private final List<T> resources = new ArrayList<>();
-    public  List<T> getResources() {
-        return resources;
-    }
+   List<T> getResources();
 
-    public abstract List<T> getUpdatedResources();
+
+    List<T> getUpdatedResources();
 }
