@@ -14,13 +14,13 @@ public class AdapterRegisterService {
 
 
     private final WebClient webClient;
-    private final PingService pingService;
+    private final HeartbeatService heartbeatService;
     private final AdapterProperties props;
 
 
-    public AdapterRegisterService(WebClient webClient, PingService pingService, AdapterProperties props) {
+    public AdapterRegisterService(WebClient webClient, HeartbeatService heartbeatService, AdapterProperties props) {
         this.webClient = webClient;
-        this.pingService = pingService;
+        this.heartbeatService = heartbeatService;
         this.props = props;
     }
 
@@ -31,7 +31,7 @@ public class AdapterRegisterService {
                 .adapterId(props.getId())
                 .orgId(props.getOrgId())
                 .time(System.currentTimeMillis())
-                .pingIntervalInMinutes(props.getPingInterval())
+                .heartbeatIntervalInMinutes(props.getHeartbeatInterval())
                 .username(props.getUsername())
                 .capabilities(props.adapterCapabilityToSet())
                 .build();
@@ -43,7 +43,7 @@ public class AdapterRegisterService {
                 .toBodilessEntity()
                 .subscribe(response -> {
                     log.info("Register return with code {}.", response.getStatusCode().value());
-                    pingService.start();
+                    heartbeatService.start();
                 });
 
         log.info("Keep on rocking in a free world ✌️🌻️🇺🇦!");
