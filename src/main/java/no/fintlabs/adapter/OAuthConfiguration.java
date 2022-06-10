@@ -4,6 +4,7 @@ import io.netty.channel.ChannelOption;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.reactive.ClientHttpConnector;
@@ -69,6 +70,7 @@ public class OAuthConfiguration {
         );
     }
 
+    @ConditionalOnProperty(matchIfMissing = true, name = "fint.adapter.security-disabled", havingValue = "false")
     @Bean
     public WebClient webClient(WebClient.Builder builder, ReactiveOAuth2AuthorizedClientManager authorizedClientManager, ClientHttpConnector clientHttpConnector) {
         ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
@@ -82,6 +84,20 @@ public class OAuthConfiguration {
                 .clientConnector(clientHttpConnector)
                 .exchangeStrategies(exchangeStrategies)
                 .filter(oauth2Client)
+                .baseUrl(props.getBaseUrl())
+                .build();
+    }
+
+    @ConditionalOnProperty(name = "fint.adapter.security-disabled", havingValue = "true")
+    @Bean
+    public WebClient noOauthWebClient(WebClient.Builder builder, ReactiveOAuth2AuthorizedClientManager authorizedClientManager, ClientHttpConnector clientHttpConnector) {
+        ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
+                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(-1))
+                .build();
+
+        return builder
+                .clientConnector(clientHttpConnector)
+                .exchangeStrategies(exchangeStrategies)
                 .baseUrl(props.getBaseUrl())
                 .build();
     }
