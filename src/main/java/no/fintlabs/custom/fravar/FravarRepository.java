@@ -23,6 +23,8 @@ public class FravarRepository implements ResourceRepository<FravarResource> {
 
     private final List<FravarResource> resources = new ArrayList<>();
 
+    private long iterationCount = 0;
+
     @PostConstruct
     public void init() {
 
@@ -30,8 +32,6 @@ public class FravarRepository implements ResourceRepository<FravarResource> {
             resources.add(createFravar());
         }
         log.info("Generated {} fravar resources", getResources().size());
-
-
     }
 
     @Override
@@ -41,15 +41,19 @@ public class FravarRepository implements ResourceRepository<FravarResource> {
 
     @Override
     public List<FravarResource> getUpdatedResources() {
-        int min = 0;
-        int start = new Random().ints(min, getResources().size())
-                .findFirst()
-                .orElseThrow();
-        int end = new Random().ints(start, getResources().size())
-                .findFirst()
-                .orElseThrow();
+        int first = 0, max = 20;
 
-        return resources.subList(start, end);
+        int count = new Random().nextInt(max) + 1;
+        int start = new Random().nextInt(first, getResources().size() - count);
+
+        List<FravarResource> subList = resources.subList(start, start + count);
+
+        if (++iterationCount % 2 == 0) {
+            log.debug("Generate changes on " + subList.size() + " resources");
+            subList.forEach(fravarResource -> fravarResource.setKommentar(generateComment(52)));
+        }
+
+        return subList;
     }
 
     private FravarResource createFravar() {
@@ -78,6 +82,4 @@ public class FravarRepository implements ResourceRepository<FravarResource> {
         boolean useNumbers = false;
         return RandomStringUtils.random(length, useLetters, useNumbers);
     }
-
-
 }
