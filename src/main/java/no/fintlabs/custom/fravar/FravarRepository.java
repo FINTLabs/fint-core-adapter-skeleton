@@ -49,8 +49,10 @@ public class FravarRepository implements ResourceRepository<FravarResource> {
         List<FravarResource> subList = resources.subList(start, start + count);
 
         if (++iterationCount % 2 == 0) {
-            log.debug("Generate changes on " + subList.size() + " resources");
             subList.forEach(fravarResource -> fravarResource.setKommentar(generateComment(52)));
+            log.info("Resend " + subList.size() + " changed resources");
+        } else {
+            log.info("Resend " + subList.size() + " resources");
         }
 
         return subList;
