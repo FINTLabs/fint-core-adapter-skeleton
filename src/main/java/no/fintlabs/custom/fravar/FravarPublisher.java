@@ -25,7 +25,7 @@ public class FravarPublisher extends ResourcePublisher<FravarResource, ResourceR
     }
 
     @Override
-    @Scheduled(initialDelayString = "60000", fixedRateString = "120000")
+    @Scheduled(initialDelayString = "60000", fixedRateString = "30000")
     public void doDeltaSync() {
         log.info("Start delta sync for resource {}", getCapability().getEntityUri());
         submit(repository.getUpdatedResources());
