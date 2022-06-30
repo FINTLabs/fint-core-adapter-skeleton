@@ -60,7 +60,6 @@ spec:
             - secretRef:
                 name: fint-core-adapter-skeleton
           env:
-            - name: TZ
-              value: Europe/Oslo
-            - name: JAVA_TOOL_OPTIONS
-              value: '-XX:+ExitOnOutOfMemoryError -Xmx480M -verbose:gc'
+            - { name: TZ, value: Europe/Oslo }
+            - { name: JAVA_TOOL_OPTIONS, value: '-XX:+ExitOnOutOfMemoryError -Xmx480M -verbose:gc' }
+            - { name: fint.adapter.base-url, value: 'https://beta.felleskomponent.no'}
