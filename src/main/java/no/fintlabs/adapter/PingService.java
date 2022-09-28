@@ -46,7 +46,7 @@ public class PingService {
                     .build();
 
             webClient.post()
-                    .uri("/provider/ping")
+                    .uri("/provider/heartbeat")
                     .body(Mono.just(adapterPing), AdapterPing.class)
                     .retrieve()
                     .bodyToMono(String.class)

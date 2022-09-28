@@ -65,7 +65,7 @@ public class FravarRepository extends ResourceRepository<FravarResource> {
         fravarResource.addElevforhold(Link.with(Elevforhold.class, "systemid", generateComment(2)));
         fravarResource.addElevforhold(Link.with(Skoleressurs.class, "systemid", generateComment(2)));
         fravarResource.addUndervisningsgruppe(Link.with(Undervisningsgruppe.class, "systemid", generateComment(1)));
-        fravarResource.addSelf(Link.with(Fravar.class, "systemid", identifikator.getIdentifikatorverdi()));
+        //fravarResource.addSelf(Link.with(Fravar.class, "systemid", identifikator.getIdentifikatorverdi()));
 
         return fravarResource;
     }

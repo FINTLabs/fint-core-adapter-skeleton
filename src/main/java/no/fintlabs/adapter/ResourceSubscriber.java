@@ -6,6 +6,7 @@ import no.fintlabs.adapter.models.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -21,6 +22,7 @@ public abstract class ResourceSubscriber<T extends FintLinks, P extends Resource
     private final WebClient webClient;
     protected final AdapterProperties adapterProperties;
 
+    private FullSyncStatistics fullSyncStatistics;
 
     protected ResourceSubscriber(WebClient webClient, AdapterProperties adapterProperties, P publisher) {
         this.webClient = webClient;
@@ -31,21 +33,46 @@ public abstract class ResourceSubscriber<T extends FintLinks, P extends Resource
 
     public void onSync(List<T> resources) {
         log.info("Syncing {} items to endpoint {}", resources.size(), getCapability().getEntityUri());
-        getPages(resources, 500).
+        int pageSize = 100;
+
+        getPages(resources, pageSize).
                 forEach(this::post);
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        while (fullSyncStatistics.getCounter() > 0) {
+        }
+
+        Duration timeElapsed = fullSyncStatistics.end();
+        log.info("Syncing {} elements in {} pages with {} max concurrent connections took {}:{}:{} to complete",
+                resources.size(),
+                (resources.size() + pageSize - 1) / pageSize,
+                fullSyncStatistics.getMaxCounters(),
+                String.format("%02d", timeElapsed.toHoursPart()),
+                String.format("%02d", timeElapsed.toMinutesPart()),
+                String.format("%02d", timeElapsed.toSecondsPart())
+        );
     }
 
     protected abstract AdapterCapability getCapability();
 
 
     protected void post(SyncPage<T> page) {
+
+        fullSyncStatistics.increase();
+
         webClient.post()
                 .uri("/provider" + getCapability().getEntityUri())
                 .body(Mono.just(page), FullSyncPage.class)
                 .retrieve()
                 .toBodilessEntity()
                 .subscribe(response -> {
-                    log.info("Posting page ({}) returned {}.", page.getMetadata().getCorrId(), response.getStatusCode());
+                    log.info("Posting page {} returned {}. ({})", page.getMetadata().getPage(), page.getMetadata().getCorrId(), response.getStatusCode());
+                    fullSyncStatistics.decrease();
                 });
     }
 
@@ -54,17 +81,23 @@ public abstract class ResourceSubscriber<T extends FintLinks, P extends Resource
         List<SyncPage<T>> pages = new ArrayList<>();
         int size = resources.size();
         String corrId = UUID.randomUUID().toString();
+        fullSyncStatistics = new FullSyncStatistics();
 
         for (int i = 0; i < size; i += pageSize) {
             int end = Math.min((i + pageSize), resources.size());
-            List<SyncPageEntry<T>> entries = resources.subList(i, end).stream().map(SyncPageEntry::ofSystemId).collect(Collectors.toList());
+            List<SyncPageEntry<T>> entries = resources
+                    .subList(i, end)
+                    .stream()
+                    .map(SyncPageEntry::ofSystemId)
+                    .collect(Collectors.toList());
+
             pages.add(FullSyncPage.<T>builder()
                     .resources(entries)
                     .metadata(SyncPageMetadata.builder()
                             .orgId(adapterProperties.getOrgId())
                             .adapterId(adapterProperties.getId())
                             .corrId(corrId)
-                            .totalPages(size / pageSize)
+                            .totalPages((size + pageSize - 1) / pageSize)
                             .totalSize(size)
                             .pageSize(entries.size())
                             .page((i / pageSize) + 1)
@@ -74,6 +107,7 @@ public abstract class ResourceSubscriber<T extends FintLinks, P extends Resource
                     )
                     .build());
         }
+
 
         return pages;
     }
@@ -91,7 +125,7 @@ public abstract class ResourceSubscriber<T extends FintLinks, P extends Resource
 
     @Override
     public void onError(Throwable throwable) {
-        log.error(throwable.getMessage());
+        log.error(throwable.getMessage(), throwable);
     }
 
     @Override
