@@ -57,7 +57,13 @@ public abstract class ResourceSubscriber<T extends FintLinks, P extends Resource
 
         for (int i = 0; i < size; i += pageSize) {
             int end = Math.min((i + pageSize), resources.size());
-            List<SyncPageEntry<T>> entries = resources.subList(i, end).stream().map(SyncPageEntry::ofSystemId).collect(Collectors.toList());
+
+            List<SyncPageEntry<T>> entries = resources
+                    .subList(i, end)
+                    .stream()
+                    .map(this::createSyncPageEntry)
+                    .collect(Collectors.toList());
+
             pages.add(FullSyncPage.<T>builder()
                     .resources(entries)
                     .metadata(SyncPageMetadata.builder()
@@ -78,6 +84,8 @@ public abstract class ResourceSubscriber<T extends FintLinks, P extends Resource
         return pages;
     }
 
+    protected abstract SyncPageEntry<T> createSyncPageEntry(T resource);
+
     @Override
     public void onSubscribe(Flow.Subscription subscription) {
         log.info("Subscribing to resources for endpoint {}", getCapability().getEntityUri());
@@ -91,7 +99,7 @@ public abstract class ResourceSubscriber<T extends FintLinks, P extends Resource
 
     @Override
     public void onError(Throwable throwable) {
-        log.error(throwable.getMessage());
+        log.error(throwable.getMessage(), throwable);
     }
 
     @Override
