@@ -57,7 +57,13 @@ public abstract class ResourceSubscriber<T extends FintLinks, P extends Resource
 
         for (int i = 0; i < size; i += pageSize) {
             int end = Math.min((i + pageSize), resources.size());
-            List<SyncPageEntry<T>> entries = resources.subList(i, end).stream().map(resource -> createSyncPageEntry(resource)).collect(Collectors.toList());
+
+            List<SyncPageEntry<T>> entries = resources
+                    .subList(i, end)
+                    .stream()
+                    .map(this::createSyncPageEntry)
+                    .collect(Collectors.toList());
+
             pages.add(FullSyncPage.<T>builder()
                     .resources(entries)
                     .metadata(SyncPageMetadata.builder()
@@ -79,7 +85,6 @@ public abstract class ResourceSubscriber<T extends FintLinks, P extends Resource
     }
 
     protected abstract SyncPageEntry<T> createSyncPageEntry(T resource);
-    // SyncPageEntry.ofSystemId(resource)
 
     @Override
     public void onSubscribe(Flow.Subscription subscription) {

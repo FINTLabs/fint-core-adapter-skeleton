@@ -26,10 +26,10 @@ public class FravarSubscriber extends ResourceSubscriber<FravarResource, FravarP
     @Override
     protected SyncPageEntry<FravarResource> createSyncPageEntry(FravarResource resource) {
 
-         String identificationValue = resource.getSystemId().getIdentifikatorverdi();
-         return SyncPageEntry.of(identificationValue, resource);
+        String identificationValue = resource.getSystemId().getIdentifikatorverdi();
+        return SyncPageEntry.of(identificationValue, resource);
 
-         // If SystemId is provided you can use:
+        // If SystemId is provided as selflink you can use this instead:
         // return SyncPageEntry.ofSystemId(resource);
     }
 }
