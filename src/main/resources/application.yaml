@@ -10,18 +10,18 @@ fint:
    # base-url: https://alpha.felleskomponent.no
     registration-id: fint
     org-id: fintlabs.no
-    ping-interval: 1
+    heartbeat-interval: 1
     capabilities:
       fravar:
-        domain: utdanning
-        packageName: vurdering
-        clazz: fravar
+        domain-name: utdanning
+        package-name: vurdering
+        resource-name: fravar
         fullSyncIntervalInDays: 7
         deltaSyncInterval: IMMEDIATE
       fravarsoversikt:
-        domain: utdanning
+        domain-name: utdanning
         packageName: vurdering
-        clazz: fravarsoversikt
+        resource-name: fravarsoversikt
         fullSyncIntervalInDays: 7
         deltaSyncInterval: IMMEDIATE
 

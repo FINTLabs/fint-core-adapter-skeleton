@@ -1,0 +1,65 @@
+apiVersion: onepassword.com/v1
+kind: OnePasswordItem
+metadata:
+  name: fint-core-adapter-skeleton
+  labels:
+spec:
+  itemPath: "vaults/aks-beta-vault/items/fint-core-adapter-skeleton"
+---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  annotations:
+#    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+#  labels:
+#    io.kompose.service: fint-core-adapter-skeleton
+#  name: fint-core-adapter-skeleton
+#spec:
+#  ports:
+#    - name: "8080"
+#      port: 8080
+#  type: LoadBalancer
+#  selector:
+#    io.kompose.service: fint-core-adapter-skeleton
+#---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    operator.1password.io/item-path: "vaults/aks-beta-vault/items/fint-core-adapter-skeleton"
+    operator.1password.io/item-name: "fint-core-adapter-skeleton"
+  labels:
+    io.kompose.service: fint-core-adapter-skeleton
+  name: fint-core-adapter-skeleton
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      io.kompose.service: fint-core-adapter-skeleton
+  template:
+    metadata:
+      labels:
+        io.kompose.service: fint-core-adapter-skeleton
+    spec:
+      restartPolicy: Always
+      containers:
+        - image: fintlabsacr.azurecr.io/fint-core-adapter-skeleton:dummy
+          name: fint-core-adapter-skeleton
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "1"
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: fint-core-adapter-skeleton
+          env:
+            - { name: TZ, value: Europe/Oslo }
+            - { name: JAVA_TOOL_OPTIONS, value: '-XX:+ExitOnOutOfMemoryError -Xmx480M -verbose:gc' }
+            - { name: fint.adapter.base-url, value: 'https://beta.felleskomponent.no'}

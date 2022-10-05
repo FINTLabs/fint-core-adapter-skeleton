@@ -13,11 +13,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class FravarPublisher extends ResourcePublisher<FravarResource, ResourceRepository<FravarResource>> {
 
-
     public FravarPublisher(FravarRepository repository, AdapterProperties adapterProperties) {
         super(repository, adapterProperties);
     }
-
 
     @Override
     @Scheduled(initialDelayString = "10000", fixedRateString = "#{@adapterProperties.getFullSyncIntervalMs('fravar')}")
@@ -25,8 +23,6 @@ public class FravarPublisher extends ResourcePublisher<FravarResource, ResourceR
         log.info("Start full sync for resource {}", getCapability().getEntityUri());
         submit(repository.getResources());
     }
-
-
 
     @Override
     @Scheduled(initialDelayString = "60000", fixedRateString = "30000")
@@ -39,6 +35,4 @@ public class FravarPublisher extends ResourcePublisher<FravarResource, ResourceR
     protected AdapterCapability getCapability() {
         return adapterProperties.getCapabilityByResource("fravar");
     }
-
-
 }

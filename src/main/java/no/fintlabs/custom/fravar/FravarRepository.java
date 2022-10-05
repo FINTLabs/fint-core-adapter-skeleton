@@ -12,41 +12,51 @@ import no.fint.model.utdanning.timeplan.Undervisningsgruppe;
 import no.fint.model.utdanning.vurdering.Fravar;
 import no.fintlabs.adapter.ResourceRepository;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Repository
-public class FravarRepository extends ResourceRepository<FravarResource> {
+public class FravarRepository implements ResourceRepository<FravarResource> {
+
+    private final List<FravarResource> resources = new ArrayList<>();
+
+    private long iterationCount = 0;
 
     @PostConstruct
     public void init() {
 
         for (int i = 0; i < 5243; i++) {
-            getResources().add(createFravar());
+            resources.add(createFravar());
         }
         log.info("Generated {} fravar resources", getResources().size());
+    }
 
-
+    @Override
+    public List<FravarResource> getResources() {
+        return resources;
     }
 
     @Override
     public List<FravarResource> getUpdatedResources() {
-        int min = 0;
-        int start = new Random().ints(min, getResources().size())
-                .findFirst()
-                .orElseThrow();
-        int end = new Random().ints(start, getResources().size())
-                .findFirst()
-                .orElseThrow();
+        int first = 0, max = 20;
 
-        return getResources().subList(start, end);
+        int count = new Random().nextInt(max) + 1;
+        int start = new Random().nextInt(first, getResources().size() - count);
+
+        List<FravarResource> subList = resources.subList(start, start + count);
+
+        //if (++iterationCount % 2 == 0) {
+        if (false) {
+            subList.forEach(fravarResource -> fravarResource.setKommentar(generateComment(52)));
+            log.info("Resend " + subList.size() + " changed resources");
+        } else {
+            log.info("Resend " + subList.size() + " resources");
+        }
+
+        return subList;
     }
 
     private FravarResource createFravar() {
@@ -75,6 +85,4 @@ public class FravarRepository extends ResourceRepository<FravarResource> {
         boolean useNumbers = false;
         return RandomStringUtils.random(length, useLetters, useNumbers);
     }
-
-
 }
