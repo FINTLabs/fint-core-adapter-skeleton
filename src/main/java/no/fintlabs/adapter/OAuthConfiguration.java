@@ -60,11 +60,13 @@ public class OAuthConfiguration {
         return new ReactorClientHttpConnector(HttpClient.create(
                         ConnectionProvider
                                 .builder("laidback")
-                                .maxConnections(100)
+                                .maxConnections(5)
+                                .pendingAcquireMaxCount(-1)
+                                .pendingAcquireTimeout(Duration.ofMinutes(15))
                                 .maxLifeTime(Duration.ofMinutes(30))
                                 .maxIdleTime(Duration.ofMinutes(5))
                                 .build())
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 600000)
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 900000)
                 .responseTimeout(Duration.ofMinutes(10))
         );
     }

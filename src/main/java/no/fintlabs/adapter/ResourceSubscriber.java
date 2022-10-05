@@ -6,6 +6,8 @@ import no.fintlabs.adapter.models.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -31,8 +33,21 @@ public abstract class ResourceSubscriber<T extends FintLinks, P extends Resource
 
     public void onSync(List<T> resources) {
         log.info("Syncing {} items to endpoint {}", resources.size(), getCapability().getEntityUri());
-        getPages(resources, 500).
+
+        int pageSize = 100;
+        Instant start = Instant.now();
+
+        getPages(resources, pageSize).
                 forEach(this::post);
+
+        Duration timeElapsed = Duration.between(start, Instant.now());
+        log.info("Syncing {} elements in {} pages took {}:{}:{} to complete",
+                resources.size(),
+                (resources.size() + pageSize - 1) / pageSize,
+                String.format("%02d", timeElapsed.toHoursPart()),
+                String.format("%02d", timeElapsed.toMinutesPart()),
+                String.format("%02d", timeElapsed.toSecondsPart())
+        );
     }
 
     protected abstract AdapterCapability getCapability();
@@ -45,7 +60,7 @@ public abstract class ResourceSubscriber<T extends FintLinks, P extends Resource
                 .retrieve()
                 .toBodilessEntity()
                 .subscribe(response -> {
-                    log.info("Posting page ({}) returned {}.", page.getMetadata().getCorrId(), response.getStatusCode());
+                    log.info("Posting page {} returned {}. ({})", page.getMetadata().getPage(), page.getMetadata().getCorrId(), response.getStatusCode());
                 });
     }
 
@@ -70,7 +85,7 @@ public abstract class ResourceSubscriber<T extends FintLinks, P extends Resource
                             .orgId(adapterProperties.getOrgId())
                             .adapterId(adapterProperties.getId())
                             .corrId(corrId)
-                            .totalPages(size / pageSize)
+                            .totalPages((size + pageSize - 1) / pageSize)
                             .totalSize(size)
                             .pageSize(entries.size())
                             .page((i / pageSize) + 1)
