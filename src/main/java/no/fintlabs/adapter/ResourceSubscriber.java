@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import no.fint.model.resource.FintLinks;
 import no.fintlabs.adapter.models.*;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
@@ -36,14 +37,17 @@ public abstract class ResourceSubscriber<T extends FintLinks, P extends Resource
 
         int pageSize = 100;
         Instant start = Instant.now();
+        Flux.fromIterable(getPages(resources, pageSize))
+                .flatMap(this::post)
+                .doOnComplete(() -> logDuration(resources.size(), pageSize, start))
+                .blockLast();
+    }
 
-        getPages(resources, pageSize).
-                forEach(this::post);
-
+    private static void logDuration(int totalSize, int pageSize, Instant start) {
         Duration timeElapsed = Duration.between(start, Instant.now());
         log.info("Syncing {} elements in {} pages took {}:{}:{} to complete",
-                resources.size(),
-                (resources.size() + pageSize - 1) / pageSize,
+                totalSize,
+                (totalSize + pageSize - 1) / pageSize,
                 String.format("%02d", timeElapsed.toHoursPart()),
                 String.format("%02d", timeElapsed.toMinutesPart()),
                 String.format("%02d", timeElapsed.toSecondsPart())
@@ -53,13 +57,13 @@ public abstract class ResourceSubscriber<T extends FintLinks, P extends Resource
     protected abstract AdapterCapability getCapability();
 
 
-    protected void post(SyncPage<T> page) {
-        webClient.post()
+    protected Mono<?> post(SyncPage<T> page) {
+        return webClient.post()
                 .uri("/provider" + getCapability().getEntityUri())
                 .body(Mono.just(page), FullSyncPage.class)
                 .retrieve()
                 .toBodilessEntity()
-                .subscribe(response -> {
+                .doOnNext(response -> {
                     log.info("Posting page {} returned {}. ({})", page.getMetadata().getPage(), page.getMetadata().getCorrId(), response.getStatusCode());
                 });
     }
