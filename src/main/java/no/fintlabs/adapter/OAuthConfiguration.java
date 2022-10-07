@@ -60,7 +60,7 @@ public class OAuthConfiguration {
         return new ReactorClientHttpConnector(HttpClient.create(
                         ConnectionProvider
                                 .builder("laidback")
-                                .maxConnections(5)
+                                .maxConnections(25)
                                 .pendingAcquireMaxCount(-1)
                                 .pendingAcquireTimeout(Duration.ofMinutes(15))
                                 .maxLifeTime(Duration.ofMinutes(30))
