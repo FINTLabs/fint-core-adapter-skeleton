@@ -39,6 +39,7 @@ dependencies {
     implementation 'no.fintlabs:fint-core-infra-models:1.0.0-rc-11'
     //implementation 'no.fintlabs:fint-core-infra-models:0-SNAPSHOT'
     implementation "no.fint:fint-utdanning-resource-model-java:${apiVersion}"
+    implementation('no.fintlabs:fint-core-adapter-common:0.1.0-rc-2')
 
     implementation 'org.apache.commons:commons-lang3:3.12.0'
 
