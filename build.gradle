@@ -1,6 +1,6 @@
 plugins {
-    id 'org.springframework.boot' version '2.6.4'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'org.springframework.boot' version '2.7.5'
+    id 'io.spring.dependency-management' version '1.1.0'
     id 'java'
     id 'groovy'
     id 'com.github.ben-manes.versions' version '0.43.0'
@@ -37,7 +37,7 @@ dependencies {
 
     implementation 'io.netty:netty-resolver-dns-native-macos:4.1.84.Final:osx-aarch_64'
 
-    implementation 'no.fintlabs:fint-core-infra-models:1.0.0-rc-11'
+    implementation 'no.fintlabs:fint-core-infra-models:1.0.0-rc-13'
     //implementation 'no.fintlabs:fint-core-infra-models:0-SNAPSHOT'
     implementation "no.fint:fint-utdanning-resource-model-java:${apiVersion}"
     implementation "no.fint:fint-personvern-resource-model-java:${apiVersion}"
@@ -53,8 +53,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'cglib:cglib-nodep:3.3.0'
-    testImplementation 'org.spockframework:spock-spring:2.3-groovy-3.0'
-    testImplementation 'org.spockframework:spock-core:2.3-groovy-3.0'
+    testImplementation 'org.spockframework:spock-spring:2.3-groovy-4.0'
+    testImplementation 'org.spockframework:spock-core:2.3-groovy-4.0'
 }
 
 test {
