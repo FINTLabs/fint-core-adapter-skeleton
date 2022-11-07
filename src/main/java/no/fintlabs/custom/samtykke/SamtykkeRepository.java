@@ -8,10 +8,6 @@ import no.fint.model.personvern.samtykke.Behandling;
 import no.fint.model.personvern.samtykke.Samtykke;
 import no.fint.model.resource.Link;
 import no.fint.model.resource.personvern.samtykke.SamtykkeResource;
-import no.fint.model.utdanning.elev.Elevforhold;
-import no.fint.model.utdanning.elev.Skoleressurs;
-import no.fint.model.utdanning.kodeverk.Fravarstype;
-import no.fint.model.utdanning.timeplan.Undervisningsgruppe;
 import no.fintlabs.adapter.ResourceRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -34,7 +30,7 @@ public class SamtykkeRepository implements ResourceRepository<SamtykkeResource> 
         for (int i = 0; i < 50; i++) {
             resources.add(createSamtykke());
         }
-        log.info("Generated {} fravar resources", getResources().size());
+        log.info("Generated {} samtykke resources", getResources().size());
     }
 
     @Override
