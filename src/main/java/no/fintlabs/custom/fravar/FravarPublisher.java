@@ -2,10 +2,12 @@ package no.fintlabs.custom.fravar;
 
 import lombok.extern.slf4j.Slf4j;
 import no.fint.model.resource.utdanning.vurdering.FravarResource;
-import no.fintlabs.adapter.AdapterProperties;
+import no.fintlabs.adapter.AdapterInstanceProperties;
 import no.fintlabs.adapter.ResourcePublisher;
 import no.fintlabs.adapter.ResourceRepository;
 import no.fintlabs.adapter.models.AdapterCapability;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +15,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class FravarPublisher extends ResourcePublisher<FravarResource, ResourceRepository<FravarResource>> {
 
-    public FravarPublisher(FravarRepository repository, AdapterProperties adapterProperties) {
-        super(repository, adapterProperties);
+    public FravarPublisher(FravarRepository repository, @Qualifier("fint1") AdapterInstanceProperties adapterInstanceProperties) {
+        super(repository, adapterInstanceProperties);
     }
 
     @Override
-    @Scheduled(initialDelayString = "10000", fixedRateString = "#{@adapterProperties.getFullSyncIntervalMs('fravar')}")
+    //@Scheduled(initialDelayString = "10000", fixedRateString = "#{@adapterProperties.getFullSyncIntervalMs('fravar')}")
     public void doFullSync() {
         log.info("Start full sync for resource {}", getCapability().getEntityUri());
         submit(repository.getResources());
@@ -33,6 +35,6 @@ public class FravarPublisher extends ResourcePublisher<FravarResource, ResourceR
 
     @Override
     protected AdapterCapability getCapability() {
-        return adapterProperties.getCapabilityByResource("fravar");
+        return adapterInstanceProperties.getCapabilityByResource("fravar");
     }
 }

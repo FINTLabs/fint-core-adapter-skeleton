@@ -2,8 +2,10 @@ package no.fintlabs;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+@ComponentScan("no.fintlabs.adapter")
 @EnableScheduling
 @SpringBootApplication
 public class Application {

@@ -2,10 +2,11 @@ package no.fintlabs.custom.samtykke;
 
 import lombok.extern.slf4j.Slf4j;
 import no.fint.model.resource.personvern.samtykke.SamtykkeResource;
-import no.fintlabs.adapter.AdapterProperties;
+import no.fintlabs.adapter.AdapterInstanceProperties;
 import no.fintlabs.adapter.ResourcePublisher;
 import no.fintlabs.adapter.ResourceRepository;
 import no.fintlabs.adapter.models.AdapterCapability;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +14,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class SamtykkePublisher extends ResourcePublisher<SamtykkeResource, ResourceRepository<SamtykkeResource>> {
 
-    public SamtykkePublisher(SamtykkeRepository repository, AdapterProperties adapterProperties) {
-        super(repository, adapterProperties);
+    public SamtykkePublisher(SamtykkeRepository repository, @Qualifier("fint") AdapterInstanceProperties adapterInstanceProperties) {
+        super(repository, adapterInstanceProperties);
     }
 
     @Override
-    @Scheduled(initialDelayString = "10000", fixedRateString = "#{@adapterProperties.getFullSyncIntervalMs('samtykke')}")
+    //@Scheduled(initialDelayString = "10000", fixedRateString = "#{@adapterProperties.getFullSyncIntervalMs('samtykke')}")
     public void doFullSync() {
         log.info("Start full sync for resource {}", getCapability().getEntityUri());
         submit(repository.getResources());
@@ -33,6 +34,6 @@ public class SamtykkePublisher extends ResourcePublisher<SamtykkeResource, Resou
 
     @Override
     protected AdapterCapability getCapability() {
-        return adapterProperties.getCapabilityByResource("samtykke");
+        return adapterInstanceProperties.getCapabilityByResource("samtykke");
     }
 }
