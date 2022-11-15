@@ -6,15 +6,25 @@ import no.fintlabs.adapter.AdapterProperties;
 import no.fintlabs.adapter.ResourcePublisher;
 import no.fintlabs.adapter.ResourceRepository;
 import no.fintlabs.adapter.models.AdapterCapability;
+import no.fintlabs.adapter.models.AdapterContract;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+
+import javax.annotation.PostConstruct;
 
 @Slf4j
 @Service
 public class SamtykkePublisher extends ResourcePublisher<SamtykkeResource, ResourceRepository<SamtykkeResource>> {
 
-    public SamtykkePublisher(SamtykkeRepository repository, AdapterProperties adapterProperties) {
+    private final String capabilityKey = "samtykke";
+
+    private WebClient webClient;
+
+    public SamtykkePublisher(SamtykkeRepository repository, AdapterProperties adapterProperties, WebClient webClient) {
         super(repository, adapterProperties);
+        this.webClient = webClient;
     }
 
     @Override
@@ -29,6 +39,31 @@ public class SamtykkePublisher extends ResourcePublisher<SamtykkeResource, Resou
     public void doDeltaSync() {
         log.info("Start delta sync for resource {}", getCapability().getEntityUri());
         submit(repository.getUpdatedResources());
+    }
+
+    @PostConstruct
+    @Scheduled(initialDelayString = "90000", fixedDelayString = "60000")
+    public void doHandleEvents() {
+        log.info("Check events for resource {}", getCapability().getEntityUri());
+
+        AdapterCapability adapterCapability = adapterProperties.getCapabilities().get(capabilityKey);
+
+        webClient.get()
+                .uri(
+                        String.format(
+                                "/provider/event/%s/%s/%s/",
+                                adapterCapability.getDomainName(),
+                                adapterCapability.getPackageName(),
+                                adapterCapability.getResourceName()
+                        )
+                )
+                .retrieve()
+                .toBodilessEntity()
+                .subscribe(response -> {
+                    log.info("Event return with code {}.", response.getStatusCode().value());
+                    Void body = response.getBody();
+                });
+
     }
 
     @Override
