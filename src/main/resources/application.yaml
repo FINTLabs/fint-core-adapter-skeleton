@@ -1,6 +1,6 @@
 fint:
   adapter:
-    fint:
+    org1-no:
       id: https://vigoiks.no/fintlabs-no/utdanning/vurdering
       password:
       username:
@@ -22,6 +22,23 @@ fint:
           resource-name: fravarsoversikt
           fullSyncIntervalInDays: 7
           deltaSyncInterval: IMMEDIATE
+        samtykke:
+          domain-name: personvern
+          packageName: samtykke
+          resource-name: samtykke
+          fullSyncIntervalInDays: 7
+          deltaSyncInterval: IMMEDIATE
+
+    org2-no:
+      id: https://vigoiks.no/fintlabs-no/utdanning/trond
+      password:
+      username:
+      #base-url: http://localhost:8081
+      base-url: https://alpha.felleskomponent.no
+      registration-id: fint
+      org-id: fintlabs.no
+      heartbeat-interval: 1
+      capabilities:
         samtykke:
           domain-name: personvern
           packageName: samtykke
