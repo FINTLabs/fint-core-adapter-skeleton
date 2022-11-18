@@ -35,7 +35,7 @@ fint:
       username:
       #base-url: http://localhost:8081
       base-url: https://alpha.felleskomponent.no
-      registration-id: fint
+      registration-id: fint2
       org-id: fintlabs.no
       heartbeat-interval: 1
       capabilities:
@@ -55,6 +55,12 @@ spring:
             token-uri: https://idp.felleskomponent.no/nidp/oauth/nam/token?resourceServer=fint-api
         registration:
           fint:
+            authorization-grant-type: password
+            client-id:
+            client-secret:
+            provider: fint-idp
+            scope: fint-adapter
+          fint2:
             authorization-grant-type: password
             client-id:
             client-secret:
