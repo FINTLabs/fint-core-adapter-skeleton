@@ -1,10 +1,10 @@
 package no.fintlabs.custom.samtykke;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import no.fint.model.resource.personvern.samtykke.SamtykkeResource;
 import no.fintlabs.adapter.AdapterProperties;
 import no.fintlabs.adapter.events.EventPublisher;
-import no.fintlabs.adapter.events.ResourceConverter;
 import no.fintlabs.adapter.models.RequestFintEvent;
 import no.fintlabs.adapter.models.ResponseFintEvent;
 import no.fintlabs.adapter.models.SyncPageEntry;
@@ -16,8 +16,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Service
 public class SamtykkeEventPublisher extends EventPublisher<SamtykkeResource> {
 
-    public SamtykkeEventPublisher(ResourceConverter resourceConverter, WebClient webClient, AdapterProperties adapterProperties, SamtykkeRepository repository) {
-        super("samtykke", SamtykkeResource.class, resourceConverter, webClient, adapterProperties, repository);
+    public SamtykkeEventPublisher(AdapterProperties adapterProperties, SamtykkeRepository repository, WebClient webClient, ObjectMapper objectMapper) {
+        super("samtykke", SamtykkeResource.class, webClient, adapterProperties, repository, objectMapper);
     }
 
     @Override
