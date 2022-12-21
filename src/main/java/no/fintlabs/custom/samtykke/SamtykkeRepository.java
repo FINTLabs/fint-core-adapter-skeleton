@@ -8,7 +8,8 @@ import no.fint.model.personvern.samtykke.Behandling;
 import no.fint.model.personvern.samtykke.Samtykke;
 import no.fint.model.resource.Link;
 import no.fint.model.resource.personvern.samtykke.SamtykkeResource;
-import no.fintlabs.adapter.ResourceRepository;
+import no.fintlabs.adapter.events.WriteableResourceRepository;
+import no.fintlabs.adapter.models.RequestFintEvent;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Repository;
@@ -18,7 +19,7 @@ import java.util.*;
 
 @Slf4j
 @Repository
-public class SamtykkeRepository implements ResourceRepository<SamtykkeResource> {
+public class SamtykkeRepository implements WriteableResourceRepository<SamtykkeResource> {
 
     private final List<SamtykkeResource> resources = new ArrayList<>();
 
@@ -56,6 +57,29 @@ public class SamtykkeRepository implements ResourceRepository<SamtykkeResource> 
         }
 
         return subList;
+    }
+
+    @Override
+    public SamtykkeResource saveResources(SamtykkeResource samtykkeResource, RequestFintEvent requestFintEvent) {
+
+        if (requestFintEvent.getOperation() == RequestFintEvent.OperationType.CREATE) {
+            resources.add(samtykkeResource);
+        } else {
+            String id = samtykkeResource.getSystemId().getIdentifikatorverdi();
+            int index = indexOf(id);
+            if (index < 0) throw new IllegalArgumentException("No element with id found: " + id);
+            resources.set(index, samtykkeResource);
+        }
+
+        return samtykkeResource;
+    }
+
+    private int indexOf(String systemId) {
+        int index = -1;
+        for (int i = 0; i < resources.size(); i++) {
+            if (resources.get(0).getSystemId().getIdentifikatorverdi().equals(systemId)) return index;
+        }
+        return index;
     }
 
     private SamtykkeResource createSamtykke() {
