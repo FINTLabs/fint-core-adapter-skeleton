@@ -8,13 +8,19 @@ import no.fintlabs.adapter.ResourceRepository;
 import no.fintlabs.adapter.models.AdapterCapability;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Slf4j
 @Service
 public class SamtykkePublisher extends ResourcePublisher<SamtykkeResource, ResourceRepository<SamtykkeResource>> {
 
-    public SamtykkePublisher(SamtykkeRepository repository, AdapterProperties adapterProperties) {
+    private final String capabilityKey = "samtykke";
+
+    private WebClient webClient;
+
+    public SamtykkePublisher(SamtykkeRepository repository, AdapterProperties adapterProperties, WebClient webClient) {
         super(repository, adapterProperties);
+        this.webClient = webClient;
     }
 
     @Override

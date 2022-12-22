@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.7.5'
+    id 'org.springframework.boot' version '2.7.6'
     id 'io.spring.dependency-management' version '1.1.0'
     id 'java'
     id 'groovy'
@@ -21,13 +21,13 @@ jar {
 }
 
 repositories {
-    mavenCentral()
+    mavenLocal()
     repositories {
         maven {
             url "https://repo.fintlabs.no/releases"
         }
     }
-    mavenLocal()
+    mavenCentral()
 }
 
 dependencies {
@@ -37,11 +37,10 @@ dependencies {
 
     implementation 'io.netty:netty-resolver-dns-native-macos:4.1.84.Final:osx-aarch_64'
 
-    implementation 'no.fintlabs:fint-core-infra-models:1.0.0-rc-13'
-    //implementation 'no.fintlabs:fint-core-infra-models:0-SNAPSHOT'
+    implementation 'no.fintlabs:fint-core-infra-models:1.0.0-rc-15'
     implementation "no.fint:fint-utdanning-resource-model-java:${apiVersion}"
     implementation "no.fint:fint-personvern-resource-model-java:${apiVersion}"
-    implementation('no.fintlabs:fint-core-adapter-common:0.1.0-rc-2')
+    implementation('no.fintlabs:fint-core-adapter-common:0.1.0-rc-4')
 
     implementation 'org.apache.commons:commons-lang3:3.12.0'
 
