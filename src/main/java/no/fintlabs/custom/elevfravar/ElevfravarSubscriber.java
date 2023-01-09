@@ -1,7 +1,7 @@
-package no.fintlabs.custom.fravar;
+package no.fintlabs.custom.elevfravar;
 
 import lombok.extern.slf4j.Slf4j;
-import no.fint.model.resource.utdanning.vurdering.FravarResource;
+import no.fint.model.resource.utdanning.vurdering.ElevfravarResource;
 import no.fintlabs.adapter.AdapterProperties;
 import no.fintlabs.adapter.ResourceSubscriber;
 import no.fintlabs.adapter.models.AdapterCapability;
@@ -11,20 +11,20 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Slf4j
 @Service
-public class FravarSubscriber extends ResourceSubscriber<FravarResource, FravarPublisher> {
+public class ElevfravarSubscriber extends ResourceSubscriber<ElevfravarResource, ElevfravarPublisher> {
 
-    protected FravarSubscriber(WebClient webClient, AdapterProperties props, FravarPublisher publisher) {
+    protected ElevfravarSubscriber(WebClient webClient, AdapterProperties props, ElevfravarPublisher publisher) {
         super(webClient, props, publisher);
     }
 
     @Override
     protected AdapterCapability getCapability() {
 
-        return adapterProperties.getCapabilities().get("fravar");
+        return adapterProperties.getCapabilities().get("elevfravar");
     }
 
     @Override
-    protected SyncPageEntry<FravarResource> createSyncPageEntry(FravarResource resource) {
+    protected SyncPageEntry<ElevfravarResource> createSyncPageEntry(ElevfravarResource resource) {
 
         String identificationValue = resource.getSystemId().getIdentifikatorverdi();
         return SyncPageEntry.of(identificationValue, resource);
@@ -32,4 +32,5 @@ public class FravarSubscriber extends ResourceSubscriber<FravarResource, FravarP
         // If SystemId is provided as selflink you can use this instead:
         // return SyncPageEntry.ofSystemId(resource);
     }
+
 }
