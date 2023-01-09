@@ -65,24 +65,24 @@ public class ElevfravarRepository implements ResourceRepository<ElevfravarResour
         Identifikator identifikator = new Identifikator();
 
         identifikator.setIdentifikatorverdi(UUID.randomUUID().toString());
-        elevfravarResource.setFravar(generateFravarsregistreringResourceList());
+        elevfravarResource.setFravar(createFravarsregistreringer());
         elevfravarResource.setSystemId(identifikator);
 
         return elevfravarResource;
     }
 
-    private List<FravarsregistreringResource> generateFravarsregistreringResourceList() {
+    private List<FravarsregistreringResource> createFravarsregistreringer() {
         List<FravarsregistreringResource> fravarsregistreringList = new ArrayList<>();
         int randomRange = (int) ((Math.random() * (25)) + 0);
 
         for (int i = 0; i < randomRange; i++) {
-            fravarsregistreringList.add(generateFravarsregistreringResource());
+            fravarsregistreringList.add(createFravarsregistrering());
         }
 
         return fravarsregistreringList;
     }
 
-    private FravarsregistreringResource generateFravarsregistreringResource() {
+    private FravarsregistreringResource createFravarsregistrering() {
         FravarsregistreringResource fravarsregistrering = new FravarsregistreringResource();
         Periode periode = new Periode();
 
