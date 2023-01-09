@@ -5,7 +5,6 @@ import no.fint.model.felles.kompleksedatatyper.Identifikator;
 import no.fint.model.felles.kompleksedatatyper.Periode;
 import no.fint.model.resource.utdanning.vurdering.ElevfravarResource;
 import no.fint.model.resource.utdanning.vurdering.FravarsregistreringResource;
-import no.fint.model.utdanning.vurdering.Fravarsregistrering;
 import no.fintlabs.adapter.ResourceRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Repository;
@@ -64,7 +63,7 @@ public class ElevfravarRepository implements ResourceRepository<ElevfravarResour
     private ElevfravarResource createElevfravar() {
         ElevfravarResource elevfravarResource = new ElevfravarResource();
         Identifikator identifikator = new Identifikator();
-        ;
+
         identifikator.setIdentifikatorverdi(UUID.randomUUID().toString());
         elevfravarResource.setFravar(generateFravarsregistreringResourceList());
         elevfravarResource.setSystemId(identifikator);
