@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
 import no.fint.model.felles.kompleksedatatyper.Periode;
 import no.fint.model.resource.utdanning.vurdering.ElevfravarResource;
+import no.fint.model.resource.utdanning.vurdering.FravarsregistreringResource;
 import no.fint.model.utdanning.vurdering.Fravarsregistrering;
 import no.fintlabs.adapter.ResourceRepository;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -48,7 +49,9 @@ public class ElevfravarRepository implements ResourceRepository<ElevfravarResour
             subList.forEach(elevfravarResource -> {
                 elevfravarResource
                         .getFravar()
-                        .forEach(fravarsregistreringResource -> fravarsregistreringResource.setKommentar(generateComment(52)));
+                        .forEach(fravarsregistreringResource ->
+                                fravarsregistreringResource
+                                        .setKommentar(generateComment(52)));
             });
             log.info("Resend " + subList.size() + " changed resources");
         } else {
@@ -60,8 +63,28 @@ public class ElevfravarRepository implements ResourceRepository<ElevfravarResour
 
     private ElevfravarResource createElevfravar() {
         ElevfravarResource elevfravarResource = new ElevfravarResource();
-        Fravarsregistrering fravarsregistrering = new Fravarsregistrering();
         Identifikator identifikator = new Identifikator();
+        ;
+        identifikator.setIdentifikatorverdi(UUID.randomUUID().toString());
+        elevfravarResource.setFravar(generateFravarsregistreringResourceList());
+        elevfravarResource.setSystemId(identifikator);
+
+        return elevfravarResource;
+    }
+
+    private List<FravarsregistreringResource> generateFravarsregistreringResourceList() {
+        List<FravarsregistreringResource> fravarsregistreringList = new ArrayList<>();
+        int randomRange = (int) ((Math.random() * (25)) + 0);
+
+        for (int i = 0; i < randomRange; i++) {
+            fravarsregistreringList.add(generateFravarsregistreringResource());
+        }
+
+        return fravarsregistreringList;
+    }
+
+    private FravarsregistreringResource generateFravarsregistreringResource() {
+        FravarsregistreringResource fravarsregistrering = new FravarsregistreringResource();
         Periode periode = new Periode();
 
         periode.setStart(new Date());
@@ -70,9 +93,8 @@ public class ElevfravarRepository implements ResourceRepository<ElevfravarResour
         fravarsregistrering.setForesPaVitnemal(false);
         fravarsregistrering.setKommentar(generateComment(52));
         fravarsregistrering.setPeriode(periode);
-        identifikator.setIdentifikatorverdi(UUID.randomUUID().toString());
 
-        return elevfravarResource;
+        return fravarsregistrering;
     }
 
     private String generateComment(int length) {
