@@ -12,7 +12,7 @@ fint:
       elevfravar:
         domain-name: utdanning
         package-name: vurdering
-        resource-name: fravar
+        resource-name: elevfravar
         fullSyncIntervalInDays: 7
         deltaSyncInterval: IMMEDIATE
       fravarsoversikt:

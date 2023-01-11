@@ -1,9 +1,9 @@
 plugins {
-    id 'org.springframework.boot' version '2.7.6'
+    id 'org.springframework.boot' version '2.7.7'
     id 'io.spring.dependency-management' version '1.1.0'
     id 'java'
     id 'groovy'
-    id 'com.github.ben-manes.versions' version '0.43.0'
+    id 'com.github.ben-manes.versions' version '0.44.0'
 }
 
 group = 'no.fintlabs'
@@ -35,9 +35,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
-    implementation 'io.netty:netty-resolver-dns-native-macos:4.1.84.Final:osx-aarch_64'
+    implementation 'io.netty:netty-resolver-dns-native-macos:4.1.86.Final:osx-aarch_64'
 
-    implementation 'no.fintlabs:fint-core-infra-models:1.0.0-rc-15'
+    implementation 'no.fintlabs:fint-core-infra-models:1.0.0-rc-16'
     implementation "no.fint:fint-utdanning-resource-model-java:${apiVersion}"
     implementation "no.fint:fint-personvern-resource-model-java:${apiVersion}"
     implementation('no.fintlabs:fint-core-adapter-common:0.1.0-rc-4')
