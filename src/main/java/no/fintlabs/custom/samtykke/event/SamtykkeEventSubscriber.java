@@ -1,4 +1,4 @@
-package no.fintlabs.custom.samtykke;
+package no.fintlabs.custom.samtykke.event;
 
 import lombok.extern.slf4j.Slf4j;
 import no.fint.model.resource.personvern.samtykke.SamtykkeResource;
