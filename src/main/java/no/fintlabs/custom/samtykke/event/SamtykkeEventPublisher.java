@@ -3,7 +3,7 @@ package no.fintlabs.custom.samtykke.event;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import no.fint.model.resource.personvern.samtykke.SamtykkeResource;
-import no.fintlabs.adapter.AdapterProperties;
+import no.fintlabs.adapter.config.AdapterProperties;
 import no.fintlabs.adapter.events.EventPublisher;
 import no.fintlabs.adapter.models.RequestFintEvent;
 import no.fintlabs.adapter.models.ResponseFintEvent;

@@ -5,7 +5,7 @@ import no.fint.model.felles.kompleksedatatyper.Identifikator;
 import no.fint.model.felles.kompleksedatatyper.Periode;
 import no.fint.model.resource.utdanning.vurdering.ElevfravarResource;
 import no.fint.model.resource.utdanning.vurdering.FravarsregistreringResource;
-import no.fintlabs.adapter.ResourceRepository;
+import no.fintlabs.adapter.datasync.ResourceRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Repository;
 

@@ -2,9 +2,10 @@ package no.fintlabs.custom.elevfravar;
 
 import lombok.extern.slf4j.Slf4j;
 import no.fint.model.resource.utdanning.vurdering.ElevfravarResource;
-import no.fintlabs.adapter.AdapterProperties;
-import no.fintlabs.adapter.ResourcePublisher;
-import no.fintlabs.adapter.ResourceRepository;
+import no.fintlabs.adapter.config.AdapterProperties;
+import no.fintlabs.adapter.datasync.ResourcePublisher;
+import no.fintlabs.adapter.datasync.ResourceRepository;
+import no.fintlabs.adapter.datasync.SyncData;
 import no.fintlabs.adapter.models.AdapterCapability;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -21,14 +22,14 @@ public class ElevfravarPublisher extends ResourcePublisher<ElevfravarResource, R
     @Scheduled(initialDelayString = "10000", fixedRateString = "#{@adapterProperties.getFullSyncIntervalMs('elevfravar')}")
     public void doFullSync() {
         log.info("Start full sync for resource {}", getCapability().getEntityUri());
-        submit(repository.getResources());
+        submit(SyncData.ofPostData(repository.getResources()));
     }
 
     @Override
-    @Scheduled(initialDelayString = "60000", fixedRateString = "30000")
+    @Scheduled(initialDelayString = "120000", fixedRateString = "180000")
     public void doDeltaSync() {
         log.info("Start delta sync for resource {}", getCapability().getEntityUri());
-        submit(repository.getUpdatedResources());
+        submit(SyncData.ofPatchData(repository.getUpdatedResources()));
     }
 
     @Override
