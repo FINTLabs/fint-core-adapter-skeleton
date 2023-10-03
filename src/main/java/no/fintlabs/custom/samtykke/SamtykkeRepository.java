@@ -1,5 +1,6 @@
 package no.fintlabs.custom.samtykke;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import no.fint.model.felles.Person;
 import no.fint.model.felles.kompleksedatatyper.Identifikator;
@@ -14,7 +15,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.PostConstruct;
 import java.util.*;
 
 @Slf4j
