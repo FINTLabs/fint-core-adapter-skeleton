@@ -1,7 +1,7 @@
-package no.fintlabs.custom.elevfravar;
+package no.fintlabs.custom.larling;
 
 import lombok.extern.slf4j.Slf4j;
-import no.fint.model.resource.utdanning.vurdering.ElevfravarResource;
+import no.fint.model.resource.utdanning.larling.LarlingResource;
 import no.fintlabs.adapter.config.AdapterProperties;
 import no.fintlabs.adapter.datasync.ResourcePublisher;
 import no.fintlabs.adapter.datasync.ResourceRepository;
@@ -12,14 +12,14 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class ElevfravarPublisher extends ResourcePublisher<ElevfravarResource, ResourceRepository<ElevfravarResource>> {
+public class LarlingPublisher extends ResourcePublisher<LarlingResource, ResourceRepository<LarlingResource>> {
 
-    public ElevfravarPublisher(ElevfravarRepository repository, AdapterProperties adapterProperties) {
+    public LarlingPublisher(LarlingRepository repository, AdapterProperties adapterProperties) {
         super(repository, adapterProperties);
     }
 
     @Override
-    @Scheduled(initialDelayString = "10000", fixedRateString = "#{@adapterProperties.getFullSyncIntervalMs('elevfravar')}")
+    @Scheduled(initialDelayString = "10000", fixedRateString = "#{@adapterProperties.getFullSyncIntervalMs('larling')}")
     public void doFullSync() {
         log.info("Start full sync for resource {}", getCapability().getEntityUri());
         submit(SyncData.ofPostData(repository.getResources()));
@@ -34,6 +34,6 @@ public class ElevfravarPublisher extends ResourcePublisher<ElevfravarResource, R
 
     @Override
     protected AdapterCapability getCapability() {
-        return adapterProperties.getCapabilityByResource("elevfravar");
+        return adapterProperties.getCapabilityByResource("larling");
     }
 }

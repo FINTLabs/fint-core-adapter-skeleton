@@ -1,0 +1,5 @@
+server:
+  port: 8082
+fint:
+  adapter:
+    base-url: http://localhost:8081
