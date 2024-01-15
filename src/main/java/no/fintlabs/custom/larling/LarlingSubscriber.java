@@ -1,7 +1,7 @@
-package no.fintlabs.custom.samtykke;
+package no.fintlabs.custom.larling;
 
 import lombok.extern.slf4j.Slf4j;
-import no.fint.model.resource.personvern.samtykke.SamtykkeResource;
+import no.fint.model.resource.utdanning.larling.LarlingResource;
 import no.fintlabs.adapter.config.AdapterProperties;
 import no.fintlabs.adapter.datasync.ResourceSubscriber;
 import no.fintlabs.adapter.models.AdapterCapability;
@@ -12,25 +12,22 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Slf4j
 @Service
-public class SamtykkeSubscriber extends ResourceSubscriber<SamtykkeResource, SamtykkePublisher> {
+public class LarlingSubscriber extends ResourceSubscriber<LarlingResource, LarlingPublisher> {
 
-    protected SamtykkeSubscriber(WebClient webClient, AdapterProperties props, SamtykkePublisher publisher, ValidatorService validatorService) {
+    protected LarlingSubscriber(WebClient webClient, AdapterProperties props, LarlingPublisher publisher, ValidatorService validatorService) {
         super(webClient, props, publisher, validatorService);
     }
 
     @Override
     protected AdapterCapability getCapability() {
-
-        return adapterProperties.getCapabilities().get("samtykke");
+        return adapterProperties.getCapabilities().get("larling");
     }
 
     @Override
-    protected SyncPageEntry<SamtykkeResource> createSyncPageEntry(SamtykkeResource resource) {
+    protected SyncPageEntry<LarlingResource> createSyncPageEntry(LarlingResource resource) {
 
         String identificationValue = resource.getSystemId().getIdentifikatorverdi();
         return SyncPageEntry.of(identificationValue, resource);
-
-        // If SystemId is provided as selflink you can use this instead:
-        // return SyncPageEntry.ofSystemId(resource);
     }
+
 }
