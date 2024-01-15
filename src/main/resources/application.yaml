@@ -9,22 +9,34 @@ fint:
     org-id: fintlabs.no
     heartbeat-interval: 1
     capabilities:
-      elevfravar:
+      larling:
         domain-name: utdanning
-        package-name: vurdering
-        resource-name: elevfravar
+        package-name: larling
+        resource-name: larling
         fullSyncIntervalInDays: 7
         deltaSyncInterval: IMMEDIATE
-      fravarsoversikt:
+      larling-person:
         domain-name: utdanning
-        packageName: vurdering
-        resource-name: fravarsoversikt
+        package-name: larling
+        resource-name: person
         fullSyncIntervalInDays: 7
         deltaSyncInterval: IMMEDIATE
-      samtykke:
-        domain-name: personvern
-        packageName: samtykke
-        resource-name: samtykke
+      virksomhet:
+        domain-name: utdanning
+        package-name: larling
+        resource-name: virksomhet
+        fullSyncIntervalInDays: 7
+        deltaSyncInterval: IMMEDIATE
+      otungdom:
+        domain-name: utdanning
+        package-name: ot
+        resource-name: otungdom
+        fullSyncIntervalInDays: 7
+        deltaSyncInterval: IMMEDIATE
+      ot-person:
+        domain-name: utdanning
+        package-name: ot
+        resource-name: person
         fullSyncIntervalInDays: 7
         deltaSyncInterval: IMMEDIATE
 
