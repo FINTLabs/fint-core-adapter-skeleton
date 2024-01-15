@@ -1,8 +1,8 @@
 fint:
   adapter:
     id: https://vigoiks.no/fintlabs-no/utdanning/larling-ot
-    password:
-    username:
+    password: ${fint.core.oauth2.password}
+    username: ${fint.core.oauth2.username}
     base-url: https://alpha.felleskomponent.no
     registration-id: fint
     org-id: fintlabs.no
