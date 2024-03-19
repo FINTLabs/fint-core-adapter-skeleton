@@ -38,7 +38,7 @@ dependencies {
     implementation 'io.netty:netty-resolver-dns-native-macos:4.1.86.Final:osx-aarch_64'
 
     implementation "jakarta.annotation:jakarta.annotation-api:2.1.1"
-    implementation 'no.fintlabs:fint-core-infra-models:1.0.0-rc-16'
+    implementation 'no.fintlabs:fint-core-infra-models:1.1.2'
     implementation "no.fint:fint-utdanning-resource-model-java:${apiVersion}"
     implementation "no.fint:fint-personvern-resource-model-java:${apiVersion}"
     implementation('no.fintlabs:fint-core-adapter-common:0.1.0')

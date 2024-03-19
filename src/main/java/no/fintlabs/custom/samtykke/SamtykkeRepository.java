@@ -10,6 +10,7 @@ import no.fint.model.personvern.samtykke.Samtykke;
 import no.fint.model.resource.Link;
 import no.fint.model.resource.personvern.samtykke.SamtykkeResource;
 import no.fintlabs.adapter.events.WriteableResourceRepository;
+import no.fintlabs.adapter.models.OperationType;
 import no.fintlabs.adapter.models.RequestFintEvent;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -62,7 +63,7 @@ public class SamtykkeRepository implements WriteableResourceRepository<SamtykkeR
     @Override
     public SamtykkeResource saveResources(SamtykkeResource samtykkeResource, RequestFintEvent requestFintEvent) {
 
-        if (requestFintEvent.getOperation() == RequestFintEvent.OperationType.CREATE) {
+        if (requestFintEvent.getOperationType() == OperationType.CREATE) {
             resources.add(samtykkeResource);
         } else {
             String id = samtykkeResource.getSystemId().getIdentifikatorverdi();
