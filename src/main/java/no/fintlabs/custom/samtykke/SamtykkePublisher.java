@@ -6,7 +6,6 @@ import no.fintlabs.adapter.config.AdapterProperties;
 import no.fintlabs.adapter.datasync.ResourcePublisher;
 import no.fintlabs.adapter.datasync.ResourceRepository;
 import no.fintlabs.adapter.datasync.SyncData;
-import no.fintlabs.adapter.datasync.SyncDataMethod;
 import no.fintlabs.adapter.models.AdapterCapability;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
