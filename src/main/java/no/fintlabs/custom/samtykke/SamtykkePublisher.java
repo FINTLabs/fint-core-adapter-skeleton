@@ -32,7 +32,7 @@ public class SamtykkePublisher extends ResourcePublisher<SamtykkeResource, Resou
     }
 
     @Override
-    @Scheduled(initialDelayString = "120000", fixedRateString = "180000")
+    @Scheduled(initialDelayString = "120000", fixedRateString = "1800000")
     public void doDeltaSync() {
         log.info("Start delta sync for resource {}", getCapability().getEntityUri());
         submit(SyncData.ofPatchData(repository.getUpdatedResources()));
