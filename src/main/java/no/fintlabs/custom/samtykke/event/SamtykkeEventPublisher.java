@@ -5,9 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import no.fint.model.resource.personvern.samtykke.SamtykkeResource;
 import no.fintlabs.adapter.config.AdapterProperties;
 import no.fintlabs.adapter.events.EventPublisher;
-import no.fintlabs.adapter.models.RequestFintEvent;
-import no.fintlabs.adapter.models.ResponseFintEvent;
-import no.fintlabs.adapter.models.SyncPageEntry;
+import no.fintlabs.adapter.models.event.RequestFintEvent;
+import no.fintlabs.adapter.models.event.ResponseFintEvent;
+import no.fintlabs.adapter.models.sync.SyncPageEntry;
 import no.fintlabs.custom.samtykke.SamtykkeRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class SamtykkeEventPublisher extends EventPublisher<SamtykkeResource> {
 
     @Override
     protected void handleEvent(RequestFintEvent requestFintEvent, SamtykkeResource samtykkeResource) {
-        ResponseFintEvent<SamtykkeResource> response = createResponse(requestFintEvent);
+        ResponseFintEvent response = createResponse(requestFintEvent);
 
         if (resourceNotValid(samtykkeResource, response)) return;
 
@@ -49,12 +49,12 @@ public class SamtykkeEventPublisher extends EventPublisher<SamtykkeResource> {
         submit(response);
     }
 
-    protected SyncPageEntry<SamtykkeResource> createSyncPageEntry(SamtykkeResource resource) {
+    protected SyncPageEntry createSyncPageEntry(SamtykkeResource resource) {
         String identificationValue = resource.getSystemId().getIdentifikatorverdi();
         return SyncPageEntry.of(identificationValue, resource);
     }
 
-    private boolean resourceNotValid(SamtykkeResource samtykkeResource, ResponseFintEvent<SamtykkeResource> response) {
+    private boolean resourceNotValid(SamtykkeResource samtykkeResource, ResponseFintEvent response) {
 
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(samtykkeResource, "samtykkeResource");
         validator.validate(samtykkeResource, bindingResult);

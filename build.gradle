@@ -1,6 +1,6 @@
 plugins {
-    id 'org.springframework.boot' version '3.3.2'
-    id 'io.spring.dependency-management' version '1.1.6'
+    id 'org.springframework.boot' version '3.4.1'
+    id 'io.spring.dependency-management' version '1.1.7'
     id 'java'
     id 'groovy'
     id 'com.github.ben-manes.versions' version '0.51.0'
@@ -34,14 +34,14 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
-    implementation 'io.netty:netty-resolver-dns-native-macos:4.2.0.Alpha2:osx-aarch_64'
+    implementation 'io.netty:netty-resolver-dns-native-macos:4.1.116.Final:osx-aarch_64'
 
     implementation 'jakarta.annotation:jakarta.annotation-api:3.0.0'
     implementation "no.fint:fint-utdanning-resource-model-java:${apiVersion}"
     implementation "no.fint:fint-personvern-resource-model-java:${apiVersion}"
-    implementation 'no.fintlabs:fint-core-adapter-common:0.1.5-rc-2'
+    implementation 'no.fintlabs:fint-core-adapter-common:0.1.6-rc-4'
 
-    implementation 'org.apache.commons:commons-lang3:3.16.0'
+    implementation 'org.apache.commons:commons-lang3:3.17.0'
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
