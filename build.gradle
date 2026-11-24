@@ -41,7 +41,7 @@ dependencies {
     implementation "no.fint:fint-personvern-resource-model-java:${apiVersion}"
     implementation 'no.fintlabs:fint-core-adapter-common:0.1.6-rc-4'
 
-    implementation 'org.apache.commons:commons-lang3:3.17.0'
+    implementation 'org.apache.commons:commons-lang3:3.22.0'
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
