@@ -39,7 +39,7 @@ dependencies {
     implementation 'jakarta.annotation:jakarta.annotation-api:3.0.0'
     implementation "no.fint:fint-utdanning-resource-model-java:${apiVersion}"
     implementation "no.fint:fint-personvern-resource-model-java:${apiVersion}"
-    implementation 'no.fintlabs:fint-core-adapter-common:0.1.6-rc-4'
+    implementation 'no.fintlabs:fint-core-adapter-common:0.1.7'
 
     implementation 'org.apache.commons:commons-lang3:3.17.0'
 
